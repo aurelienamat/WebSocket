@@ -16,12 +16,12 @@ body {
   place-items: center;
 }
 
-section{
+section {
   display: flex;
   flex-direction: column;
 }
 
-.login__form{
+.login__form {
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -33,9 +33,15 @@ section{
   --color-border: #e3e5e8;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-[hidden] { display: none !important; }
+[hidden] {
+  display: none !important;
+}
 
 .chat {
   display: grid;
@@ -51,18 +57,27 @@ section{
 
 .chat__feed {
   flex: 1;
-  overflow-y: auto;
   margin: 0;
   padding: 12px;
   list-style: none;
+  overflow-y: auto;
   display: flex;
-  width: 100%;
-  justify-content: flex-end;
   flex-direction: column;
 }
-.message{
-  width: 100%;
+
+.message {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 70%;
+  height: auto;
 }
+
+.message:first-child {
+  margin-top: auto
+}
+
 .chat__form {
   display: flex;
   gap: 8px;
@@ -70,12 +85,15 @@ section{
   border-top: 1px solid var(--color-border);
 }
 
-.chat__form input { flex: 1; }
+.chat__form input {
+  flex: 1;
+}
 
-.mine{
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  align-items: flex-end;
+.mine {
+  align-self: flex-end;
   padding-right: 3rem;
+}
+
+.mine>.message__author {
+  align-self: flex-end
 }

@@ -5,7 +5,6 @@ const messageForm = document.getElementById('message-form');
 
 const template = document.getElementById('message-template');
 const feed = document.getElementById('message-feed');
-
 var token = localStorage.getItem('token');
 var ws = null;
 
@@ -34,12 +33,16 @@ function printChat(data) {
     console.log(data.id);
     console.log(localStorage.getItem('id'));
 
-    if(data.id == localStorage.getItem('id')){
+    if (data.id == localStorage.getItem('id')) {
         clone.querySelector('.message').classList.add('mine')
         console.log('mine');
     }
 
     feed.appendChild(clone);
+    feed.lastElementChild.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    var messageInput = document.getElementById('message-input');
+    messageInput.value = "";
+    messageInput.focus();
 }
 
 function coWebSocket() {
