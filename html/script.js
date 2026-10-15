@@ -30,6 +30,10 @@ function printChat(data) {
     clone.querySelector('.message__author').textContent = data.prenom;
     clone.querySelector('.message__text').textContent = data.message;
 
+    if(localStorage.getItem('lastMessage') == data.id){
+        clone.querySelector('.message__author').style.display = 'none';
+    }
+
     console.log(data.id);
     console.log(localStorage.getItem('id'));
 
@@ -39,6 +43,7 @@ function printChat(data) {
     }
 
     feed.appendChild(clone);
+    localStorage.setItem('lastMessage',data.id);
     feed.lastElementChild.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     var messageInput = document.getElementById('message-input');
     messageInput.value = "";
@@ -62,6 +67,7 @@ function coWebSocket() {
                 console.log(data);
                 localStorage.setItem('id', data.id);
                 localStorage.setItem('prenom', data.prenom);
+                localStorage.setItem('lastMessage',null);
                 joinWebSocketReply(data);
             }
             if (data.t === 'chat') {

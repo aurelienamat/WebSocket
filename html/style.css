@@ -94,6 +94,6 @@ section {
   padding-right: 3rem;
 }
 
-.mine>.message__author {
-  align-self: flex-end
+.mine>* {
+  align-self: flex-end;
 }
