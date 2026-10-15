@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes pastilles rouges & grises</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- ECRAN DE CONNEXION ==================== -->
+    <div id="ecranLogin" class="ecran">
+        <div class="boite-login">
+            <h1>IRIS</h1>
+            <p class="sous-titre">Colle ton token TSPro pour voir ce qui demande ton attention.</p>
+            <input type="password" id="champToken" placeholder="Token d'accès" autocomplete="off">
+            <button id="btnConnexion">Connexion</button>
+            <p id="messageLogin"></p>
+
+            <div class="aide">
+                <h4>Où trouver mon token ? 🔎</h4>
+                <ol>
+                    <li>Va sur <b>efe.tspro.fr</b> et connecte-toi normalement.</li>
+                    <li><b>Clic droit</b> n'importe où sur la page → <b>Inspecter</b> (ou touche F12).</li>
+                    <li>Dans la fenêtre qui s'ouvre, onglet <b>Application</b> tout en haut.</li>
+                    <li>Colonne de gauche : <b>Storage</b> → <b>Local storage</b> → <b>https://efe.tspro.fr</b>.</li>
+                    <li>Ligne <code>student_token</code> : copie tout ce qu'il y a dans la colonne <b>Value</b>.</li>
+                    <li>Colle-le dans le champ ci-dessus, et voilà 👍</li>
+                </ol>
+                <p class="sous-titre">Le token reste sur ce PC (dans le localStorage du navigateur), il n'est envoyé
+                    qu'à efe.tspro.fr.</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
