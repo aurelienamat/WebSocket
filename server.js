@@ -29,7 +29,7 @@ async function recupPrenom(token) {
         }
 
         data = await response.json();
-        return data.eleve.prenom;
+        return data.eleve;
 
     } catch (err) {
         console.log('erreur api');
@@ -52,14 +52,16 @@ wss.on('connection', (socket) => {
         console.log('reçu:', msg);
 
         if (msg.t === 'join') {
-            socket.username = await recupPrenom(msg.token);
+            const dataEleve = await recupPrenom(msg.token);
+            socket.username = dataEleve.prenom;
+            socket.id = dataEleve.id;
             if (!socket.username) {
                 socket.send(JSON.stringify({t : 'join', err : true, message: 'Tentative join echoué'}));
                 return;
             }
 
             wss.clients.forEach((user) => {
-                user.send(JSON.stringify({ t: 'join', err : false, message: 'Tentative join success', prenom: socket.username }));
+                user.send(JSON.stringify({ t: 'join', err : false, message: 'Tentative join success', prenom: socket.username , id : socket.id}));
             })
         }
 
@@ -67,7 +69,7 @@ wss.on('connection', (socket) => {
 
         if (msg.t === 'chat') {
             wss.clients.forEach((user) => {
-                user.send(JSON.stringify({ t: 'chat', prenom: socket.username, message: msg.message }));
+                user.send(JSON.stringify({ t: 'chat', prenom: socket.username, id : socket.id ,message: msg.message }));
             })
         }
 

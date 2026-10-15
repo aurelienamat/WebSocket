@@ -1,5 +1,10 @@
-const btnConnexion = document.getElementById('btnConnexion');
+const loginForm = document.getElementById('login-form');
 const ecranLogin = document.getElementById('ecranLogin');
+const chatScreen = document.getElementById('chat-screen');
+const messageForm = document.getElementById('message-form');
+
+const template = document.getElementById('message-template');
+const feed = document.getElementById('message-feed');
 
 var token = localStorage.getItem('token');
 var ws = null;
@@ -10,13 +15,31 @@ function joinWebSocketReply(data) {
         localStorage.clear();
         console.log('Pas affichage');
         // location.reload();
-        ecranLogin.style.display = 'block';
+        ecranLogin.style.display = 'grid';
     } else if (!data.err) {
         console.log(data.message);
         console.log('Go affichage');
         //CONNECTION OK
         ecranLogin.style.display = 'none';
+        chatScreen.hidden = false;
     }
+}
+
+function printChat(data) {
+    const clone = template.content.cloneNode(true);
+
+    clone.querySelector('.message__author').textContent = data.prenom;
+    clone.querySelector('.message__text').textContent = data.message;
+
+    console.log(data.id);
+    console.log(localStorage.getItem('id'));
+
+    if(data.id == localStorage.getItem('id')){
+        clone.querySelector('.message').classList.add('mine')
+        console.log('mine');
+    }
+
+    feed.appendChild(clone);
 }
 
 function coWebSocket() {
@@ -33,8 +56,14 @@ function coWebSocket() {
         ws.addEventListener('message', (e) => {
             const data = JSON.parse(e.data);
             if (data.t === 'join') {
+                console.log(data);
+                localStorage.setItem('id', data.id);
+                localStorage.setItem('prenom', data.prenom);
                 joinWebSocketReply(data);
-            } else {
+            }
+            if (data.t === 'chat') {
+                console.log(data);
+                printChat(data);
             }
         });
 
@@ -49,18 +78,29 @@ function coWebSocket() {
     }
 }
 
-btnConnexion.addEventListener('click', saveToken);
-document.getElementById('champToken').addEventListener('keydown',(e) => {
-    if(e.key === 'Enter') saveToken();
-});
-
-function saveToken() {
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();          // annule le rechargement
     console.log('go');
     var champToken = document.getElementById('champToken').value.trim();
     console.log(champToken);
     localStorage.setItem('token', champToken);
     coWebSocket();
-}
+});
+
+// function afficherMessageUser(message) {
+//     const clone = template.content.cloneNode(true);
+
+//     clone.querySelector('.message__author').textContent = auteur;
+//     clone.querySelector('.message__text').textContent = texte;
+// }
+
+messageForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    console.log('Go message');
+    const messageInput = document.getElementById('message-input').value.trim();
+    ws.send(JSON.stringify({ t: 'chat', message: messageInput }));
+})
+
 
 coWebSocket();
 
