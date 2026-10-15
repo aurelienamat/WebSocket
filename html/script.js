@@ -10,9 +10,12 @@ function joinWebSocketReply(data) {
         localStorage.clear();
         console.log('Pas affichage');
         // location.reload();
+        ecranLogin.style.display = 'block';
     } else if (!data.err) {
         console.log(data.message);
         console.log('Go affichage');
+        //CONNECTION OK
+        ecranLogin.style.display = 'none';
     }
 }
 
@@ -31,6 +34,7 @@ function coWebSocket() {
             const data = JSON.parse(e.data);
             if (data.t === 'join') {
                 joinWebSocketReply(data);
+            } else {
             }
         });
 
@@ -45,15 +49,19 @@ function coWebSocket() {
     }
 }
 
-coWebSocket();
+btnConnexion.addEventListener('click', saveToken);
+document.getElementById('champToken').addEventListener('keydown',(e) => {
+    if(e.key === 'Enter') saveToken();
+});
 
-
-//CONNECTION OK
-// ecranLogin.style.display = 'none';
-
-btnConnexion.addEventListener('click', () => {
+function saveToken() {
+    console.log('go');
     var champToken = document.getElementById('champToken').value.trim();
     console.log(champToken);
     localStorage.setItem('token', champToken);
     coWebSocket();
-})
+}
+
+coWebSocket();
+
+

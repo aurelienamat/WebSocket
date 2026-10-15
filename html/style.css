@@ -4,7 +4,10 @@ body {
   background-color: #f4f5f7;
   color: #222;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .ecran {
@@ -66,7 +69,6 @@ body {
 
 #champToken {
   width: 100%;
-  box-sizing: border-box;
   padding: 10px;
   font-size: 15px;
   border: 1px solid #ccc;
@@ -91,4 +93,33 @@ button {
 
 button:hover {
   background-color: #21548f;
+}
+
+/* PANEL CHAT */
+#panel-chat{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+#panel-chat > *{
+  border: solid black 2px;
+}
+#panel-chat-users{
+  height: 100%;
+  width: 20%;
+}
+#panel-chat-chat{
+  height: 100%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+}
+#panel-chat-chat-feed{
+  height: 90%;
+  width: 100%;
+}
+#panel-chat-chat-input{
+  height: 10%;
+  width: 100%;
 }
