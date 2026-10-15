@@ -95,31 +95,41 @@ button:hover {
   background-color: #21548f;
 }
 
-/* PANEL CHAT */
-#panel-chat{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
+:root {
+  --color-primary: #2c6fbb;
+  --color-primary-dark: #21548f;
+  --color-border: #e3e5e8;
 }
-#panel-chat > *{
-  border: solid black 2px;
+
+*, *::before, *::after { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+.chat {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  height: 100dvh;
 }
-#panel-chat-users{
-  height: 100%;
-  width: 20%;
-}
-#panel-chat-chat{
-  height: 100%;
-  width: 80%;
+
+.chat__main {
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
-#panel-chat-chat-feed{
-  height: 90%;
-  width: 100%;
+
+.chat__feed {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 12px;
+  list-style: none;
 }
-#panel-chat-chat-input{
-  height: 10%;
-  width: 100%;
+
+.chat__form {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--color-border);
 }
+
+.chat__form input { flex: 1; }

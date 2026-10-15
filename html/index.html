@@ -35,26 +35,28 @@
     </div>
 
     <!-- CHAT -->
-    <div id="panel-chat">
-        <div id="panel-chat-users">
-            <ul>
-                <li class="user">Utilisateurs</li>
-            </ul>
-        </div>
-        <div id="panel-chat-chat">
-            <div id="panel-chat-chat-feed">
-                <ul>
-                    <li class="message">
-                        <label for="username" class="username">username</label>
-                        <p class="messag">Message</p>
-                    </li>
-                </ul>
-            </div>
-            <div id="panel-chat-chat-input">
-                <input type="text" id="chat-input">
-            </div>
-        </div>
-    </div>
+    <main id="chat-screen" class="chat">
+        <aside class="chat__users" aria-label="Utilisateurs connectés">
+            <h2>Utilisateurs</h2>
+            <ul id="user-list"></ul>
+        </aside>
+
+        <section class="chat__main">
+            <ul id="message-feed" class="chat__feed" aria-live="polite"></ul>
+
+            <form id="message-form" class="chat__form">
+                <input type="text" id="message-input" placeholder="Écris un message…" autocomplete="off" required>
+                <button type="submit" class="btn">Envoyer</button>
+            </form>
+        </section>
+    </main>
+
+    <template id="message-template">
+        <li class="message">
+            <strong class="message__author"></strong>
+            <p class="message__text"></p>
+        </li>
+    </template>
 
     <script src="script.js"></script>
 </body>
