@@ -17,6 +17,7 @@ var token = localStorage.getItem('token');
 var ws = null;
 
 function eventJoinClose(data, event) {
+    if(!data.prenom) return;
     const clone = joinTemplate.content.cloneNode(true);
 
     clone.querySelector('.join__prenom').textContent = data.prenom;
