@@ -72,6 +72,7 @@ section {
   align-items: flex-start;
   max-width: 70%;
   height: auto;
+  padding-left: 3rem;
 }
 
 .message:first-child {
