@@ -81,6 +81,7 @@ function printUsers(data) {
     data.users.forEach(user => {
         const clone = userTemplate.content.cloneNode(true);
         clone.querySelector('.user__prenom').textContent = user.prenom;
+        clone.querySelector('.user__photo').src = user.photo;
         userList.appendChild(clone);
         console.log(user);
     });

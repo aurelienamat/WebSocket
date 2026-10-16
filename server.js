@@ -43,7 +43,7 @@ async function recupPrenom(token) {
 function sendUsers() {
     let users = [];
     wss.clients.forEach((user) => {
-        users.push({ prenom: user.username, id: user.id });
+        users.push({ prenom: user.username, id: user.id, photo: user.img });
     })
     wss.clients.forEach((user) => {
         user.send(JSON.stringify({ t: 'users', users: users }));
@@ -74,14 +74,15 @@ wss.on('connection', (socket) => {
             console.log(dataEleve);
             socket.username = dataEleve.prenom;
             socket.id = dataEleve.id;
+            socket.img = dataEleve.photo;
 
             //Envoyer la liste des eleves
             sendUsers();
 
-            socket.send(JSON.stringify({ t: 'join', err: false, message: 'Tentative join success', prenom: socket.username, id: socket.id }));
+            socket.send(JSON.stringify({ t: 'join', err: false, message: 'Tentative join success', prenom: socket.username, id: socket.id, photo: socket.img }));
             wss.clients.forEach((user) => {
                 if (user.id == socket.id) return;
-                user.send(JSON.stringify({ t: 'join', err: false,prenom: socket.username }));
+                user.send(JSON.stringify({ t: 'join', err: false, prenom: socket.username, photo: user.img }));
             })
         }
 
