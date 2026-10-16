@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const { WebSocketServer } = require('ws');
+const { json } = require('stream/consumers');
 
 const app = express();
 const server = http.createServer(app);       // un seul serveur HTTP
@@ -39,6 +40,17 @@ async function recupPrenom(token) {
 
 }
 
+function sendUsers() {
+    let users = [];
+    wss.clients.forEach((user) => {
+        users.push({ prenom: user.username, id: user.id });
+    })
+    wss.clients.forEach((user) => {
+        user.send(JSON.stringify({ t: 'users', users: users }));
+    })
+    console.log(users);
+}
+
 //Lire sur le port 3003
 server.listen(3003, () => {
     console.log('Server is running on :3003');
@@ -53,15 +65,23 @@ wss.on('connection', (socket) => {
 
         if (msg.t === 'join') {
             const dataEleve = await recupPrenom(msg.token);
-            socket.username = dataEleve.prenom;
-            socket.id = dataEleve.id;
-            if (!socket.username) {
-                socket.send(JSON.stringify({t : 'join', err : true, message: 'Tentative join echoué'}));
+
+            if (!dataEleve) {
+                socket.send(JSON.stringify({ t: 'join', err: true, message: 'Tentative join echoué' }));
                 return;
             }
 
+            console.log(dataEleve);
+            socket.username = dataEleve.prenom;
+            socket.id = dataEleve.id;
+
+            //Envoyer la liste des eleves
+            sendUsers();
+
+            socket.send(JSON.stringify({ t: 'join', err: false, message: 'Tentative join success', prenom: socket.username, id: socket.id }));
             wss.clients.forEach((user) => {
-                user.send(JSON.stringify({ t: 'join', err : false, message: 'Tentative join success', prenom: socket.username , id : socket.id}));
+                if (user.id == socket.id) return;
+                user.send(JSON.stringify({ t: 'join', err: false, prenom: socket.username }));
             })
         }
 
@@ -69,18 +89,23 @@ wss.on('connection', (socket) => {
 
         if (msg.t === 'chat') {
             wss.clients.forEach((user) => {
-                user.send(JSON.stringify({ t: 'chat', prenom: socket.username, id : socket.id ,message: msg.message }));
+                user.send(JSON.stringify({ t: 'chat', prenom: socket.username, id: socket.id, message: msg.message }));
             })
         }
 
         if (msg.t === 'users') {
-            let users = [];
-            wss.clients.forEach((user) => {
-                users.push(user.username);
-            })
-            socket.send(JSON.stringify({ t: 'users', users: users }));
-            console.log(users);
+            sendUsers();
         }
 
+    });
+
+    socket.on('close', () => {
+        console.log('Client déconnecté');
+        //Envoyer la liste des users
+        sendUsers();
+        //Envoyer comme quoi le frerot se déco
+        wss.clients.forEach((user) => {
+            user.send(JSON.stringify({ t: 'close', err: false, prenom: socket.username }));
+        })
     });
 });

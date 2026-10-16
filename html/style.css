@@ -45,7 +45,7 @@ section {
 
 .chat {
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: auto 1fr;
   height: 100dvh;
 }
 
@@ -96,4 +96,28 @@ section {
 
 .mine>* {
   align-self: flex-end;
+}
+
+.join{
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
+.join::before{
+  margin-top: auto;
+  margin-bottom: auto;
+  content: "";
+  background-color: black;
+  width: 10dvw;
+  height: 1px;
+}
+.join::after{
+  margin-top: auto;
+  margin-bottom: auto;
+  content: "";
+  background-color: black;
+  width: 10dvw;
+  height: 1px;
 }

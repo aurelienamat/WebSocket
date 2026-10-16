@@ -5,8 +5,25 @@ const messageForm = document.getElementById('message-form');
 
 const template = document.getElementById('message-template');
 const feed = document.getElementById('message-feed');
+
+//Liste des users
+const userList = document.getElementById('user-list'); //ul
+const userTemplate = document.getElementById('user-template'); //template
+
+//Event join close
+const joinTemplate = document.getElementById('join-template');
+
 var token = localStorage.getItem('token');
 var ws = null;
+
+function eventJoinClose(data, event) {
+    const clone = joinTemplate.content.cloneNode(true);
+
+    clone.querySelector('.join__prenom').textContent = data.prenom;
+    clone.querySelector('.join__event').textContent = event;
+
+    feed.appendChild(clone);
+}
 
 function joinWebSocketReply(data) {
     if (data.err) {
@@ -21,6 +38,7 @@ function joinWebSocketReply(data) {
         //CONNECTION OK
         ecranLogin.style.display = 'none';
         chatScreen.hidden = false;
+        eventJoinClose(data, 'join');
     }
 }
 
@@ -30,7 +48,7 @@ function printChat(data) {
     clone.querySelector('.message__author').textContent = data.prenom;
     clone.querySelector('.message__text').textContent = data.message;
 
-    if(localStorage.getItem('lastMessage') == data.id){
+    if (localStorage.getItem('lastMessage') == data.id) {
         clone.querySelector('.message__author').style.display = 'none';
     }
 
@@ -43,11 +61,22 @@ function printChat(data) {
     }
 
     feed.appendChild(clone);
-    localStorage.setItem('lastMessage',data.id);
+    localStorage.setItem('lastMessage', data.id);
     feed.lastElementChild.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     var messageInput = document.getElementById('message-input');
     messageInput.value = "";
     messageInput.focus();
+}
+
+function printUsers(data) {
+    userList.replaceChildren();
+    console.log(data);
+    data.users.forEach(user => {
+        const clone = userTemplate.content.cloneNode(true);
+        clone.querySelector('.user__prenom').textContent = user.prenom;
+        userList.appendChild(clone);
+        console.log(user);
+    });
 }
 
 function coWebSocket() {
@@ -60,19 +89,30 @@ function coWebSocket() {
             ws = null;
         }
 
-        ws = new WebSocket('ws://localhost:3003');
+        ws = new WebSocket('ws://172.29.18.172:3003');
         ws.addEventListener('message', (e) => {
             const data = JSON.parse(e.data);
             if (data.t === 'join') {
+                console.log('msg : join');
                 console.log(data);
                 localStorage.setItem('id', data.id);
                 localStorage.setItem('prenom', data.prenom);
-                localStorage.setItem('lastMessage',null);
+                localStorage.setItem('lastMessage', null);
                 joinWebSocketReply(data);
             }
             if (data.t === 'chat') {
+                console.log('msg : chat');
                 console.log(data);
                 printChat(data);
+            }
+            if (data.t === 'users') {
+                console.log('msg : users');
+                printUsers(data);
+            }
+            if (data.t === 'close') {
+                console.log('msg : close');
+                if(data.err) return;
+                eventJoinClose(data,'leave');
             }
         });
 
