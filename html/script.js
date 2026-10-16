@@ -23,6 +23,7 @@ function eventJoinClose(data, event) {
     clone.querySelector('.join__event').textContent = event;
 
     feed.appendChild(clone);
+    localStorage.setItem('lastMessage', null);
 }
 
 function joinWebSocketReply(data) {
@@ -33,6 +34,12 @@ function joinWebSocketReply(data) {
         // location.reload();
         ecranLogin.style.display = 'grid';
     } else if (!data.err) {
+        if (data.message) {
+            console.log('pas deja co');
+            localStorage.setItem('id', data.id);
+            localStorage.setItem('prenom', data.prenom);
+            localStorage.setItem('lastMessage', null);
+        }
         console.log(data.message);
         console.log('Go affichage');
         //CONNECTION OK
@@ -95,9 +102,6 @@ function coWebSocket() {
             if (data.t === 'join') {
                 console.log('msg : join');
                 console.log(data);
-                localStorage.setItem('id', data.id);
-                localStorage.setItem('prenom', data.prenom);
-                localStorage.setItem('lastMessage', null);
                 joinWebSocketReply(data);
             }
             if (data.t === 'chat') {
@@ -111,8 +115,8 @@ function coWebSocket() {
             }
             if (data.t === 'close') {
                 console.log('msg : close');
-                if(data.err) return;
-                eventJoinClose(data,'leave');
+                if (data.err) return;
+                eventJoinClose(data, 'leave');
             }
         });
 

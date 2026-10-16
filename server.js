@@ -81,7 +81,7 @@ wss.on('connection', (socket) => {
             socket.send(JSON.stringify({ t: 'join', err: false, message: 'Tentative join success', prenom: socket.username, id: socket.id }));
             wss.clients.forEach((user) => {
                 if (user.id == socket.id) return;
-                user.send(JSON.stringify({ t: 'join', err: false, prenom: socket.username }));
+                user.send(JSON.stringify({ t: 'join', err: false,prenom: socket.username }));
             })
         }
 
