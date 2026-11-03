@@ -98,6 +98,12 @@ wss.on('connection', (socket) => {
             sendUsers();
         }
 
+        if (msg.t === 'kill') {
+            wss.clients.forEach((user) => {
+                user.send(JSON.stringify({ t: 'kill', prenom : socket.username}));
+            })
+        }
+
     });
 
     socket.on('close', () => {

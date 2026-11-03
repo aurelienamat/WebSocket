@@ -17,7 +17,7 @@ var token = localStorage.getItem('token');
 var ws = null;
 
 function eventJoinClose(data, event) {
-    if(!data.prenom) return;
+    if (!data.prenom) return;
     const clone = joinTemplate.content.cloneNode(true);
 
     clone.querySelector('.join__prenom').textContent = data.prenom;
@@ -47,6 +47,8 @@ function joinWebSocketReply(data) {
         ecranLogin.style.display = 'none';
         chatScreen.hidden = false;
         eventJoinClose(data, 'join');
+        var messageInput = document.getElementById('message-input');
+        messageInput.focus();
     }
 }
 
@@ -72,7 +74,7 @@ function printChat(data) {
     localStorage.setItem('lastMessage', data.id);
     feed.lastElementChild.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     var messageInput = document.getElementById('message-input');
-    if(data.id == localStorage.getItem('id')){
+    if (data.id == localStorage.getItem('id')) {
         messageInput.value = "";
     }
     messageInput.focus();
@@ -122,6 +124,13 @@ function coWebSocket() {
                 if (data.err) return;
                 eventJoinClose(data, 'leave');
             }
+            if (data.t === 'kill') {
+                //Effacer tout
+                while (feed.firstChild) {
+                    feed.removeChild(feed.firstChild);
+                }
+                eventJoinClose(data, 'Cleared chat');
+            }
         });
 
         console.log('token trouvé');
@@ -152,12 +161,18 @@ loginForm.addEventListener('submit', (e) => {
 // }
 
 messageForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+    e.preventDefault();                // annule le rechargement
     console.log('Go message');
     const messageInput = document.getElementById('message-input').value.trim();
     ws.send(JSON.stringify({ t: 'chat', message: messageInput }));
 })
 
+window.addEventListener('keydown', (e) => {
+    if (e.code === "ArrowRight") {
+        ws.send(JSON.stringify({ t: 'kill' }));
+    }
+    //console.log(e.code);
+})
 
 coWebSocket();
 
