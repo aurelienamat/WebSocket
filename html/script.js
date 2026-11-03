@@ -72,7 +72,9 @@ function printChat(data) {
     localStorage.setItem('lastMessage', data.id);
     feed.lastElementChild.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     var messageInput = document.getElementById('message-input');
-    messageInput.value = "";
+    if(data.id == localStorage.getItem('id')){
+        messageInput.value = "";
+    }
     messageInput.focus();
 }
 
